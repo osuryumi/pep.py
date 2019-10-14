@@ -9,6 +9,7 @@ This is Ripple's bancho server but osu!thailand forked edition. It handles:
 - The Bot
 
 ## Requirements
+
 - Python 3.6
 - Cython
 - C compiler
@@ -18,6 +19,7 @@ This is Ripple's bancho server but osu!thailand forked edition. It handles:
 - Raven
 
 ## How to set up pep.py
+
 First of all, initialize and update the submodules
 ```
 $ git submodule init && git submodule update
@@ -42,6 +44,7 @@ $ python3 pep.py
 ```
 
 ## License
+
 All code in this repository is licensed under the GNU AGPL 3 License.  
 See the "LICENSE" file for more information  
 This project contains code taken by reference from [miniircd](https://github.com/jrosdahl/miniircd) by Joel Rosdahl.
