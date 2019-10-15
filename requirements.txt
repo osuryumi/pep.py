@@ -8,3 +8,4 @@ dill==0.2.7.1
 redis==2.10.5
 cython==0.27.3
 datadog==0.14.0
+mysql-connector-python==8.0.11
