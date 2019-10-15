@@ -142,6 +142,13 @@ class config:
 		self.config.set("localize", "enable", "1")
 		self.config.set("localize", "ipapiurl", "http://ip.zxq.co")
 
+		self.config.add_section("webhooks")
+		self.config.set("webhooks", "confidential", None)
+		self.config.set("webhooks", "staff", None)
+		self.config.set("webhooks", "general", None)
+		self.config.set("webhooks", "chatlog", None)
+		self.config.set("webhooks", "cm", None)
+
 		# Write ini to file and close
 		self.config.write(f)
 		f.close()
