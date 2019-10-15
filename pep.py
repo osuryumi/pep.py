@@ -13,6 +13,7 @@ from common import generalUtils, agpl
 from common.constants import bcolors
 from common.db import dbConnector
 from common.ddog import datadogClient
+from common.log import logUtils as log
 from common.redis import pubSub
 from common.web import schiavo
 from handlers import apiFokabotMessageHandler
@@ -256,9 +257,6 @@ if __name__ == "__main__":
 				consoleHelper.printColored("[!] Warning! Datadog stats tracking is disabled!", bcolors.YELLOW)
 		except:
 			consoleHelper.printColored("[!] Error while starting Datadog client! Please check your config.ini and run the server again", bcolors.RED)
-
-
-		from common.log import logUtils as log
 
 		# IRC start message and console output
 		glob.irc = generalUtils.stringToBool(glob.conf.config["irc"]["enable"])
