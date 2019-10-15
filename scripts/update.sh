@@ -10,3 +10,6 @@ git pull
 
 echo "Updating submodules"
 git submodule update
+
+echo "Building"
+./scripts/clean_build.sh
