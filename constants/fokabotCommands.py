@@ -1241,7 +1241,8 @@ def rank_map(fro, chan, message):
 		currentMap = token.tillerino[0]
 
 		glob.db.execute("update beatmaps set ranked = %s where beatmap_id = %s", [status_id, currentMap])
-		log.logMessage(f"Карте {currentMap}", discord="staff")
+		beatmapLink = f"({currentMap})[http://osu.ppy.sh/b/{currentMap}]"
+		log.logMessage(f"Статуст карты {beatmapLink} был изменен на {status} пользователем {token.username}", discord="staff")
 	except Exception as e:
 		return ":fire: ошибка при работе"
 	
