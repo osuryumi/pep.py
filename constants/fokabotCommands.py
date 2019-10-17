@@ -1400,7 +1400,7 @@ commands = [
 		"callback": bloodcat
 	}, {
 		"trigger": "!rank_map"
-		"privileges": privileges.ADMIN_MANAGE_BEATMAPS,
+		"privileges": privileges.ADMIN_MANAGE_SERVERS,
 		"syntax": "<loved/ranked>",
 		"callback": rank_map
 	}
