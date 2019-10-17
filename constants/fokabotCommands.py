@@ -52,14 +52,14 @@ def instantRestart(fro, chan, message):
 def faq(fro, chan, message):
 	# TODO: Unhardcode this
 	messages = {
-		"rules": "Please make sure to check (osu!thailand's rules)[https://minase.tk/doc/rules].",
+		"rules": "Please make sure to check (osu!thailand's rules)[https://bigtu.vip/doc/rules].",
 		"swearing": "Please don't abuse swearing",
 		"spam": "Please don't spam",
 		"offend": "Please don't offend other players",
-		"github": "(osu!Minase's Github page!)[https://github.com/osu-minase]",
-		"discord": "(Join osu!Minase Discord!)[https://discord.gg/0rJcZruIsA6rXuIx]",
-		"changelog": "Check the (changelog)[https://minase.tk/changelog] !",
-		"status": "Check the server status (here!)[https://status.minase.tk]",
+		"github": "(osu!Ainu's Github page!)[https://github.com/osuripple/ripple]",
+		"discord": "(Join Ainu Discord!)[https://discord.gg/0rJcZruIsA6rXuIx]",
+		"changelog": "Check the (changelog)[https://bigtu.vip/changelog] !",
+		"status": "Check the server status (here!)[https://status.bigtu.vip]",
 		"english": "Please keep this channel in english.",
 		"topic": "Can you please drop the topic and talk about something else?",
 		"lines": "Please try to keep your sentences on a single line to avoid getting silenced."
@@ -664,6 +664,10 @@ def tillerinoLast(fro, chan, message):
 		log.error(a)
 		return False
 
+def mm00(fro, chan, message):
+	random.seed()
+	return random.choice(["meme", "MA MAURO ESISTE?"])
+
 def pp(fro, chan, message):
 	if chan.startswith("#"):
 		return False
@@ -721,7 +725,7 @@ def report(fro, chan, message):
 	try:
 		# TODO: Rate limit
 		# Regex on message
-		reportRegex = re.compile(r"^(.+) \((.+)\)\:(?: )?(.+)?$")
+		reportRegex = re.compile("^(.+) \((.+)\)\:(?: )?(.+)?$")
 		result = reportRegex.search(" ".join(message))
 
 		# Make sure the message matches the regex
@@ -1238,13 +1242,16 @@ commands = [
 		"callback": report
 	}, {
 		"trigger": "!help",
-		"response": "Click (here)[https://minase.tk/doc/fokabot] for full command list"
+		"response": "Click (here)[https://bigtu.vip/index.php?p=16&id=4] for full command list"
 	}, #{
 		#"trigger": "!ask",
 		#"syntax": "<question>",
 		#"callback": ask
 	#}, {
 	{
+		"trigger": "!mm00",
+		"callback": mm00
+	}, {
 		"trigger": "!alert",
 		"syntax": "<message>",
 		"privileges": privileges.ADMIN_SEND_ALERTS,

@@ -115,12 +115,12 @@ def handle(tornadoRequest):
 			expireDate = userUtils.getDonorExpire(responseToken.userID)
 			if expireDate-int(time.time()) <= 86400*3:
 				expireDays = round((expireDate-int(time.time()))/86400)
-				expireIn = "через {} дней".format(expireDays) if expireDays > 1 else "в течении 24 часов"
-				responseToken.enqueue(serverPackets.notification("Ваша роль Supporter истекает {}! Что бы измежать потерю доступа к функционалу вам необходимо продлить статус на сайте, в категории Поддержать.".format(expireIn)))
+				expireIn = "{} days".format(expireDays) if expireDays > 1 else "less than 24 hours"
+				responseToken.enqueue(serverPackets.notification("Your donor tag expires in {}! When your donor tag expires, you won't have any of the donor privileges, like yellow username, custom badge and discord custom role and username color! If you wish to keep supporting Ripple and you don't want to lose your donor privileges, you can donate again by clicking on 'Support us' on Ripple's website.".format(expireIn)))
 
 		# Deprecate telegram 2fa and send alert
 		if userUtils.deprecateTelegram2Fa(userID):
-			responseToken.enqueue(serverPackets.notification("2FA больше не используется и был отключен для вашего аккаунта. Что бы настроить заново 2FA с использованием Google Authenticator нужно перейти в настройки профиля на сайте."))
+			responseToken.enqueue(serverPackets.notification("As stated on our blog, Telegram 2FA has been deprecated on 29th June 2018. Telegram 2FA has just been disabled from your account. If you want to keep your account secure with 2FA, please enable TOTP-based 2FA from our website https://ripple.moe. Thank you for your patience."))
 
 		# Set silence end UNIX time in token
 		responseToken.silenceEndTime = userUtils.getSilenceEnd(userID)
@@ -153,7 +153,7 @@ def handle(tornadoRequest):
 				raise exceptions.banchoMaintenanceException()
 			else:
 				# We are mod/admin, send warning notification and continue
-				responseToken.enqueue(serverPackets.notification("Внимание, сервер запущен в режиме только для админов, модераторов. Что бы отключить режим нужно написать !system maintenance off в чат."))
+				responseToken.enqueue(serverPackets.notification("Bancho is in maintenance mode. Only mods/admins have full access to the server.\nType !system maintenance off in chat to turn off maintenance mode."))
 
 		# Send all needed login packets
 		responseToken.enqueue(serverPackets.silenceEndTime(silenceSeconds))
@@ -229,7 +229,7 @@ def handle(tornadoRequest):
 		# Invalid POST data
 		# (we don't use enqueue because we don't have a token since login has failed)
 		responseData += serverPackets.loginFailed()
-		responseData += serverPackets.notification("Не понял, а что вы тут делаете?")
+		responseData += serverPackets.notification("I see what you're doing...")
 	except exceptions.loginBannedException:
 		# Login banned error packet
 		responseData += serverPackets.loginBanned()
@@ -241,11 +241,11 @@ def handle(tornadoRequest):
 		responseData = bytes()
 		if responseToken is not None:
 			responseData = responseToken.queue
-		responseData += serverPackets.notification("Сервер включен в режиме только для администрации. Попробуйте войти в аккаунт через пару минут!")
+		responseData += serverPackets.notification("Our bancho server is in maintenance mode. Please try to login again later.")
 		responseData += serverPackets.loginFailed()
 	except exceptions.banchoRestartingException:
 		# Bancho is restarting
-		responseData += serverPackets.notification("Сервер начинает перезагрузку,  Попробуйте войти в аккаунт через пару минут!")
+		responseData += serverPackets.notification("Bancho is restarting. Try again in a few minutes.")
 		responseData += serverPackets.loginFailed()
 	except exceptions.need2FAException:
 		# User tried to log in from unknown IP
