@@ -1215,38 +1215,6 @@ def bloodcat(fro, chan, message):
 		beatmapID = spectatorHostToken.beatmapID
 	return bloodcatMessage(beatmapID)
 
-def rank_map(fro, chan, message):
-	status = message[0]
-
-	if status in ("ranked", "loved"):
-		return "Не верно указана команда. Пример: пишем /np для карты которую хотим ранкуть и потом !rank_map ranked"
-
-	status_id = 2 if status == "ranked" else 5
-
-	# Run the command in PM only
-	if chan.startswith("#"):
-		return False
-
-	try:
-		# Get token and user ID
-		token = glob.tokens.getTokenFromUsername(fro)
-		if token is None:
-			return False
-		userID = token.userID
-
-		# Make sure the user has triggered the bot with /np command
-		if token.tillerino[0] == 0:
-			return "Не указана карта для ранкинга. Необходимо сначала указать ее через /np"
-
-		currentMap = token.tillerino[0]
-
-		glob.db.execute("update beatmaps set ranked = %s where beatmap_id = %s", [status_id, currentMap])
-		log.logMessage(f"Карте {currentMap}", discord="staff")
-	except Exception as e:
-		return ":fire: ошибка при работе"
-	
-
-	return ":ok_hand:"
 
 """
 Commands list
@@ -1397,11 +1365,6 @@ commands = [
 	}, {
 		"trigger": "!bloodcat",
 		"callback": bloodcat
-	}, {
-		"trigger": "!rank_map"
-		"privileges": privileges.ADMIN_MANAGE_BEATMAPS,
-		"syntax": "<loved/ranked>",
-		"callback": rank_map
 	}
 	#
 	#	"trigger": "!acc",
