@@ -1219,7 +1219,7 @@ def rank_map(fro, chan, message):
 	status = message[0]
 
 	if status in ("ranked", "loved"):
-		return "Не верно указана команда. Пример: пишем /np для карты которую хотим ранкуть и потом !rank_map ranked".e
+		return "Не верно указана команда. Пример: пишем /np для карты которую хотим ранкуть и потом !rank_map ranked"
 
 	status_id = 2 if status == "ranked" else 5
 
