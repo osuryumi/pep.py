@@ -1231,7 +1231,7 @@ def rank_map(fro, chan, message):
 		# Get token and user ID
 		token = glob.tokens.getTokenFromUsername(fro)
 		if token is None:
-			return False
+			return "Token error"
 		userID = token.userID
 
 		# Make sure the user has triggered the bot with /np command
