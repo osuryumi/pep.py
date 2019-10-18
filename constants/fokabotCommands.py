@@ -1309,7 +1309,7 @@ def rank_map(fro, chan, message):
                 "UPDATE scores s JOIN (SELECT userid, MAX(score) maxscore FROM scores JOIN beatmaps ON scores.beatmap_md5 = beatmaps.beatmap_md5 WHERE beatmaps.beatmap_md5 = (SELECT beatmap_md5 FROM beatmaps WHERE beatmap_id = {} LIMIT 1) GROUP BY userid) s2 ON s.score = s2.maxscore AND s.userid = s2.userid SET completed = 2".format(
                     beatmap_data["beatmap_id"]))
 
-    chat.sendMessage(glob.BOT_NAME, "#nowranked", msg)
+    # chat.sendMessage(glob.BOT_NAME, "#nowranked", msg)
     return msg
 
 
