@@ -276,7 +276,7 @@ def switchServer(address):
 
 """ Other packets """
 def notification(message):
-	return packetHelper.buildPacket(packetIDs.server_notification, [[message, dataTypes.STRING]])
+	return packetHelper.buildPacket(packetIDs.server_notification, [[message.decode('utf-8'), dataTypes.STRING]])
 
 def banchoRestart(msUntilReconnection):
 	return packetHelper.buildPacket(packetIDs.server_restart, [[msUntilReconnection, dataTypes.UINT32]])
