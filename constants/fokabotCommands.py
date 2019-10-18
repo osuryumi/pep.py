@@ -1216,18 +1216,20 @@ def bloodcat(fro, chan, message):
 	return bloodcatMessage(beatmapID)
 
 def rank_map(fro, chan, message):
-	messages = [m.lower() for m in message]
+    messages = [m.lower() for m in message]
     rank_type = message[0]
     map_type = message[1]
     map_id = message[2]
 
     # Get persons username & ID
+
     user_id = userUtils.getID(fro)
     name = userUtils.getUsername(user_id)
 
     typeBM = None
 
     # Figure out what to do
+
     if rank_type == 'rank':
         rank_typed_str = 'ranke'
         rank_type_id = 2
@@ -1242,72 +1244,179 @@ def rank_map(fro, chan, message):
         freeze_status = 0
 
     # Grab beatmap_data from db
-    beatmap_data = glob.db.fetch("SELECT * FROM beatmaps WHERE beatmap_id = {} LIMIT 1".format(map_id))
+
+    beatmap_data = \
+        glob.db.fetch('SELECT * FROM beatmaps WHERE beatmap_id = {} LIMIT 1'.format(map_id))
 
     if map_type == 'set':
-        glob.db.execute(
-            "UPDATE beatmaps SET ranked = {}, ranked_status_freezed = {} WHERE beatmapset_id = {} LIMIT 100".format(
-                rank_type_id, freeze_status, beatmap_data["beatmapset_id"]))
+        glob.db.execute('UPDATE beatmaps SET ranked = {}, ranked_status_freezed = {} WHERE beatmapset_id = {} LIMIT 100'.format(rank_type_id,
+                        freeze_status, beatmap_data['beatmapset_id']))
         if freeze_status == 1:
             glob.db.execute("""UPDATE scores s JOIN (SELECT userid, MAX(score) maxscore FROM scores JOIN beatmaps ON scores.beatmap_md5 = beatmaps.beatmap_md5 WHERE beatmaps.beatmap_md5 = (SELECT beatmap_md5 FROM beatmaps
-					WHERE beatmapset_id = {} LIMIT 1) GROUP BY userid) s2 ON s.score = s2.maxscore AND s.userid = s2.userid SET completed = 3""".format(
-                beatmap_data["beatmapset_id"]))
+					WHERE beatmapset_id = {} LIMIT 1) GROUP BY userid) s2 ON s.score = s2.maxscore AND s.userid = s2.userid SET completed = 3""".format(beatmap_data['beatmapset_id'
+                            ]))
         typeBM = 'set'
     elif map_type == 'map':
-        glob.db.execute(
-            "UPDATE beatmaps SET ranked = {}, ranked_status_freezed = {} WHERE beatmap_id = {} LIMIT 1".format(
-                rank_type_id, freeze_status, map_id))
+        messages = [m.lower() for m in message]
+    rank_type = message[0]
+    map_type = message[1]
+    map_id = message[2]
+
+    # Get persons username & ID
+
+    user_id = userUtils.getID(fro)
+    name = userUtils.getUsername(user_id)
+
+    typeBM = None
+
+    # Figure out what to do
+
+    if rank_type == 'rank':
+        rank_typed_str = 'ranke'
+        rank_type_id = 2
+        freeze_status = 1
+    elif rank_type == 'love':
+        rank_typed_str = 'love'
+        rank_type_id = 5
+        freeze_status = 1
+    elif rank_type == 'unrank':
+        rank_typed_str = 'unranke'
+        rank_type_id = 0
+        freeze_status = 0
+
+    # Grab beatmap_data from db
+
+    beatmap_data = \
+        glob.db.fetch('SELECT * FROM beatmaps WHERE beatmap_id = {} LIMIT 1'.format(map_id))
+
+    if map_type == 'set':
+        glob.db.execute('UPDATE beatmaps SET ranked = {}, ranked_status_freezed = {} WHERE beatmapset_id = {} LIMIT 100'.format(rank_type_id,
+                        freeze_status, beatmap_data['beatmapset_id']))
         if freeze_status == 1:
             glob.db.execute("""UPDATE scores s JOIN (SELECT userid, MAX(score) maxscore FROM scores JOIN beatmaps ON scores.beatmap_md5 = beatmaps.beatmap_md5 WHERE beatmaps.beatmap_md5 = (SELECT beatmap_md5 FROM beatmaps
-					WHERE beatmap_id = {} LIMIT 1) GROUP BY userid) s2 ON s.score = s2.maxscore AND s.userid = s2.userid SET completed = 3""".format(
-                beatmap_data["beatmap_id"]))
+					WHERE beatmapset_id = {} LIMIT 1) GROUP BY userid) s2 ON s.score = s2.maxscore AND s.userid = s2.userid SET completed = 3""".format(beatmap_data['beatmapset_id'
+                            ]))
+        typeBM = 'set'
+    elif map_type == 'map':
+        glob.db.execute('UPDATE beatmaps SET ranked = {}, ranked_status_freezed = {} WHERE beatmap_id = {} LIMIT 1'.format(rank_type_id,
+                        freeze_status, map_id))
+        if freeze_status == 1:
+            glob.db.execute("""UPDATE scores s JOIN (SELECT userid, MAX(score) maxscore FROM scores JOIN beatmaps ON scores.beatmap_md5 = beatmaps.beatmap_md5 WHERE beatmaps.beatmap_md5 = (SELECT beatmap_md5 FROM beatmaps
+					WHERE beatmap_id = {} LIMIT 1) GROUP BY userid) s2 ON s.score = s2.maxscore AND s.userid = s2.userid SET completed = 3""".format(beatmap_data['beatmap_id'
+                            ]))
         typeBM = 'beatmap'
     else:
         return "Please specify whether it is a set/map. eg: '!map unrank/rank/love set/map 123456'"
 
     # Announce / Log to AP logs when ranked status is changed
-    if rank_type == "love":
-        log.rap(user_id,
-                "has {}d beatmap ({}): {} ({}).".format(rank_type, map_type, beatmap_data["song_name"], map_id),
-                True)
-        if map_type == 'set':
-            msg = "{} has loved beatmap set: [https://osu.ppy.sh/s/{} {}]".format(name, beatmap_data["beatmapset_id"],
-                                                                                  beatmap_data["song_name"])
-        else:
-            msg = "{} has loved beatmap: [https://osu.ppy.sh/s/{} {}]".format(name, map_id, beatmap_data["song_name"])
 
-        glob.db.execute(
-            "UPDATE scores s JOIN (SELECT userid, MAX(score) maxscore FROM scores JOIN beatmaps ON scores.beatmap_md5 = beatmaps.beatmap_md5 WHERE beatmaps.beatmap_md5 = (SELECT beatmap_md5 FROM beatmaps WHERE beatmap_id = {} LIMIT 1) GROUP BY userid) s2 ON s.score = s2.maxscore AND s.userid = s2.userid SET completed = 2".format(
-                beatmap_data["beatmap_id"]))
-    elif rank_type == "rank":
+    if rank_type == 'love':
         log.rap(user_id,
-                "has {}ed beatmap ({}): {} ({}).".format(rank_type, map_type, beatmap_data["song_name"], map_id),
-                True)
+                'has {}d beatmap ({}): {} ({}).'.format(rank_type,
+                map_type, beatmap_data['song_name'], map_id), True)
         if map_type == 'set':
-            msg = "{} has {}ed beatmap set: [https://osu.ppy.sh/s/{} {}]".format(name, rank_type,
-                                                                                 beatmap_data["beatmapset_id"],
-                                                                                 beatmap_data["song_name"])
+            msg = \
+                '{} has loved beatmap set: [https://osu.ppy.sh/s/{} {}]'.format(name,
+                    beatmap_data['beatmapset_id'],
+                    beatmap_data['song_name'])
         else:
-            msg = "{} has {}ed beatmap: [https://osu.ppy.sh/s/{} {}]".format(name, rank_type, map_id,
-                                                                             beatmap_data["song_name"])
-        glob.db.execute(
-            "UPDATE scores s JOIN (SELECT userid, MAX(score) maxscore FROM scores JOIN beatmaps ON scores.beatmap_md5 = beatmaps.beatmap_md5 WHERE beatmaps.beatmap_md5 = (SELECT beatmap_md5 FROM beatmaps WHERE beatmap_id = {} LIMIT 1) GROUP BY userid) s2 ON s.score = s2.maxscore AND s.userid = s2.userid SET completed = 2".format(
-                beatmap_data["beatmap_id"]))
+            msg = \
+                '{} has loved beatmap: [https://osu.ppy.sh/s/{} {}]'.format(name,
+                    map_id, beatmap_data['song_name'])
+
+        glob.db.execute('UPDATE scores s JOIN (SELECT userid, MAX(score) maxscore FROM scores JOIN beatmaps ON scores.beatmap_md5 = beatmaps.beatmap_md5 WHERE beatmaps.beatmap_md5 = (SELECT beatmap_md5 FROM beatmaps WHERE beatmap_id = {} LIMIT 1) GROUP BY userid) s2 ON s.score = s2.maxscore AND s.userid = s2.userid SET completed = 2'.format(beatmap_data['beatmap_id'
+                        ]))
+    elif rank_type == 'rank':
+        log.rap(user_id,
+                'has {}ed beatmap ({}): {} ({}).'.format(rank_type,
+                map_type, beatmap_data['song_name'], map_id), True)
+        if map_type == 'set':
+            msg = \
+                '{} has {}ed beatmap set: [https://osu.ppy.sh/s/{} {}]'.format(name,
+                    rank_type, beatmap_data['beatmapset_id'],
+                    beatmap_data['song_name'])
+        else:
+            msg = \
+                '{} has {}ed beatmap: [https://osu.ppy.sh/s/{} {}]'.format(name,
+                    rank_type, map_id, beatmap_data['song_name'])
+        glob.db.execute('UPDATE scores s JOIN (SELECT userid, MAX(score) maxscore FROM scores JOIN beatmaps ON scores.beatmap_md5 = beatmaps.beatmap_md5 WHERE beatmaps.beatmap_md5 = (SELECT beatmap_md5 FROM beatmaps WHERE beatmap_id = {} LIMIT 1) GROUP BY userid) s2 ON s.score = s2.maxscore AND s.userid = s2.userid SET completed = 2'.format(beatmap_data['beatmap_id'
+                        ]))
     else:
         log.rap(user_id,
-                "has {}ed beatmap ({}): {} ({}).".format(rank_type, map_type, beatmap_data["song_name"], map_id),
-                True)
+                'has {}ed beatmap ({}): {} ({}).'.format(rank_type,
+                map_type, beatmap_data['song_name'], map_id), True)
         if map_type == 'set':
-            msg = "{} has {}ed beatmap set: [https://osu.ppy.sh/s/{} {}]".format(name, rank_type,
-                                                                                 beatmap_data["beatmapset_id"],
-                                                                                 beatmap_data["song_name"])
+            msg = \
+                '{} has {}ed beatmap set: [https://osu.ppy.sh/s/{} {}]'.format(name,
+                    rank_type, beatmap_data['beatmapset_id'],
+                    beatmap_data['song_name'])
         else:
-            msg = "{} has {}ed beatmap: [https://osu.ppy.sh/s/{} {}]".format(name, rank_type, map_id,
-                                                                             beatmap_data["song_name"])
+            msg = \
+                '{} has {}ed beatmap: [https://osu.ppy.sh/s/{} {}]'.format(name,
+                    rank_type, map_id, beatmap_data['song_name'])
 
-            glob.db.execute(
-                "UPDATE scores s JOIN (SELECT userid, MAX(score) maxscore FROM scores JOIN beatmaps ON scores.beatmap_md5 = beatmaps.beatmap_md5 WHERE beatmaps.beatmap_md5 = (SELECT beatmap_md5 FROM beatmaps WHERE beatmap_id = {} LIMIT 1) GROUP BY userid) s2 ON s.score = s2.maxscore AND s.userid = s2.userid SET completed = 2".format(
-                    beatmap_data["beatmap_id"]))
+            glob.db.execute('UPDATE scores s JOIN (SELECT userid, MAX(score) maxscore FROM scores JOIN beatmaps ON scores.beatmap_md5 = beatmaps.beatmap_md5 WHERE beatmaps.beatmap_md5 = (SELECT beatmap_md5 FROM beatmaps WHERE beatmap_id = {} LIMIT 1) GROUP BY userid) s2 ON s.score = s2.maxscore AND s.userid = s2.userid SET completed = 2'.format(beatmap_data['beatmap_id'
+                            ]))
+
+        glob.db.execute('UPDATE beatmaps SET ranked = {}, ranked_status_freezed = {} WHERE beatmap_id = {} LIMIT 1'.format(rank_type_id,
+                        freeze_status, map_id))
+        if freeze_status == 1:
+            glob.db.execute("""UPDATE scores s JOIN (SELECT userid, MAX(score) maxscore FROM scores JOIN beatmaps ON scores.beatmap_md5 = beatmaps.beatmap_md5 WHERE beatmaps.beatmap_md5 = (SELECT beatmap_md5 FROM beatmaps
+					WHERE beatmap_id = {} LIMIT 1) GROUP BY userid) s2 ON s.score = s2.maxscore AND s.userid = s2.userid SET completed = 3""".format(beatmap_data['beatmap_id'
+                            ]))
+            typeBM = 'beatmap'
+        else:
+            return "Please specify whether it is a set/map. eg: '!map unrank/rank/love set/map 123456'"
+
+    # Announce / Log to AP logs when ranked status is changed
+
+    if rank_type == 'love':
+        log.rap(user_id,
+                'has {}d beatmap ({}): {} ({}).'.format(rank_type,
+                map_type, beatmap_data['song_name'], map_id), True)
+        if map_type == 'set':
+            msg = \
+                '{} has loved beatmap set: [https://osu.ppy.sh/s/{} {}]'.format(name,
+                    beatmap_data['beatmapset_id'],
+                    beatmap_data['song_name'])
+        else:
+            msg = \
+                '{} has loved beatmap: [https://osu.ppy.sh/s/{} {}]'.format(name,
+                    map_id, beatmap_data['song_name'])
+
+        glob.db.execute('UPDATE scores s JOIN (SELECT userid, MAX(score) maxscore FROM scores JOIN beatmaps ON scores.beatmap_md5 = beatmaps.beatmap_md5 WHERE beatmaps.beatmap_md5 = (SELECT beatmap_md5 FROM beatmaps WHERE beatmap_id = {} LIMIT 1) GROUP BY userid) s2 ON s.score = s2.maxscore AND s.userid = s2.userid SET completed = 2'.format(beatmap_data['beatmap_id'
+                        ]))
+    elif rank_type == 'rank':
+        log.rap(user_id,
+                'has {}ed beatmap ({}): {} ({}).'.format(rank_type,
+                map_type, beatmap_data['song_name'], map_id), True)
+        if map_type == 'set':
+            msg = \
+                '{} has {}ed beatmap set: [https://osu.ppy.sh/s/{} {}]'.format(name,
+                    rank_type, beatmap_data['beatmapset_id'],
+                    beatmap_data['song_name'])
+        else:
+            msg = \
+                '{} has {}ed beatmap: [https://osu.ppy.sh/s/{} {}]'.format(name,
+                    rank_type, map_id, beatmap_data['song_name'])
+        glob.db.execute('UPDATE scores s JOIN (SELECT userid, MAX(score) maxscore FROM scores JOIN beatmaps ON scores.beatmap_md5 = beatmaps.beatmap_md5 WHERE beatmaps.beatmap_md5 = (SELECT beatmap_md5 FROM beatmaps WHERE beatmap_id = {} LIMIT 1) GROUP BY userid) s2 ON s.score = s2.maxscore AND s.userid = s2.userid SET completed = 2'.format(beatmap_data['beatmap_id'
+                        ]))
+    else:
+        log.rap(user_id,
+                'has {}ed beatmap ({}): {} ({}).'.format(rank_type,
+                map_type, beatmap_data['song_name'], map_id), True)
+        if map_type == 'set':
+            msg = \
+                '{} has {}ed beatmap set: [https://osu.ppy.sh/s/{} {}]'.format(name,
+                    rank_type, beatmap_data['beatmapset_id'],
+                    beatmap_data['song_name'])
+        else:
+            msg = \
+                '{} has {}ed beatmap: [https://osu.ppy.sh/s/{} {}]'.format(name,
+                    rank_type, map_id, beatmap_data['song_name'])
+
+            glob.db.execute('UPDATE scores s JOIN (SELECT userid, MAX(score) maxscore FROM scores JOIN beatmaps ON scores.beatmap_md5 = beatmaps.beatmap_md5 WHERE beatmaps.beatmap_md5 = (SELECT beatmap_md5 FROM beatmaps WHERE beatmap_id = {} LIMIT 1) GROUP BY userid) s2 ON s.score = s2.maxscore AND s.userid = s2.userid SET completed = 2'.format(beatmap_data['beatmap_id'
+                            ]))
 
     # chat.sendMessage(glob.BOT_NAME, "#nowranked", msg)
     return msg
