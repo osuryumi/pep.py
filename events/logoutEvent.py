@@ -12,7 +12,7 @@ def handle(userToken, _=None, deleteToken=True):
 	userID = userToken.userID
 	username = userToken.username
 	requestToken = userToken.token
-
+	#requestToken.enqueue(serverPackets.notification('See you next time, thank you for playing!'))
 	# Big client meme here. If someone logs out and logs in right after,
 	# the old logout packet will still be in the queue and will be sent to
 	# the server, so we accept logout packets sent at least 5 seconds after login

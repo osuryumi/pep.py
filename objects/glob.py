@@ -8,7 +8,7 @@ from objects import matchList
 from objects import streamList
 from objects import tokenList
 from common.web import schiavo
-
+from datetime import datetime
 try:
 	with open("version") as f:
 		VERSION = f.read().strip()
@@ -20,6 +20,7 @@ except:
 DATADOG_PREFIX = "peppy"
 BOT_NAME = "AC"
 # YOU CAN CHANGE TO YOUR BOT NAME! #
+starttime = None
 application = None
 db = None
 redis = None

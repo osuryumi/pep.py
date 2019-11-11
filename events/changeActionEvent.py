@@ -34,6 +34,19 @@ if userToken.matchID != -1 and userToken.actionID != actions.MULTIPLAYING and us
 	#if (userToken.actionID == actions.PLAYING or userToken.actionID == actions.MULTIPLAYING) or (userToken.pp != userUtils.getPP(userID, userToken.gameMode)) or (userToken.gameMode != packetData["gameMode"]):
 
 	# Update cached stats if we've changed gamemode
+
+	if packetData['actionMods'] & 128 != userToken.relax:
+		userToken.relax = packetData['actionMods'] & 128
+		userToken.autopilot = packetData['actionMods'] & 8192
+		if packetData['actionMods'] & 128:
+			userToken.enqueue(serverPackets.notification('You switched to relax!'))
+			userToken.updateCachedStatsRx()
+		elif packetData['actionMods'] & 8192:
+			userToken.enqueue(serverPackets.notification('You switched to autopilot!'))
+			userToken.updateCachedStatsAp()
+		else:
+			userToken.enqueue(serverPackets.notification('You switched to vanilla!'))
+			userToken.updateCachedStats()
 	if userToken.gameMode != packetData["gameMode"]:
 		userToken.gameMode = packetData["gameMode"]
 		userToken.updateCachedStats()

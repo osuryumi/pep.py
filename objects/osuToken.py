@@ -74,6 +74,8 @@ class token:
 		self.beatmapID = 0
 		self.rankedScore = 0
 		self.accuracy = 0.0
+		self.relax = 0
+		self.autopilot = 8192
 		self.playcount = 0
 		self.totalScore = 0
 		self.gameRank = 0
@@ -455,6 +457,42 @@ class token:
 		self.gameRank = stats["gameRank"]
 		self.pp = stats["pp"]
 
+	def updateCachedStatsRx(self):
+		"""
+		Update all cached stats for this token
+
+		:return:
+		"""
+		stats = userUtils.getUserStatsRx(self.userID, self.gameMode)
+		log.debug(str(stats))
+		if stats is None:
+			log.warning("Stats query returned None")
+			return
+		self.rankedScore = stats["rankedScore"]
+		self.accuracy = stats["accuracy"]/100
+		self.playcount = stats["playcount"]
+		self.totalScore = stats["totalScore"]
+		self.gameRank = stats["gameRank"]
+		self.pp = stats["pp"]
+
+
+	def updateCachedStatsAp(self):
+		"""
+		Update all cached stats for this token
+
+		:return:
+		"""
+		stats = userUtils.getUserStatsAp(self.userID, self.gameMode)
+		log.debug(str(stats))
+		if stats is None:
+			log.warning("Stats query returned None")
+			return
+		self.rankedScore = stats["rankedScore"]
+		self.accuracy = stats["accuracy"]/100
+		self.playcount = stats["playcount"]
+		self.totalScore = stats["totalScore"]
+		self.gameRank = stats["gameRank"]
+		self.pp = stats["pp"]
 	def checkRestricted(self):
 		"""
 		Check if this token is restricted. If so, send fokabot message

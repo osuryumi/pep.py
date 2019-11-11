@@ -11,8 +11,8 @@ from helpers import chatHelper as chat
 from helpers import countryHelper
 from helpers import locationHelper
 from objects import glob
-
-
+from helpers import packetHelper
+from constants import packetIDs
 def handle(tornadoRequest):
 	# Data to return
 	responseToken = None
@@ -116,7 +116,7 @@ def handle(tornadoRequest):
 			if expireDate-int(time.time()) <= 86400*3:
 				expireDays = round((expireDate-int(time.time()))/86400)
 				expireIn = "{} days".format(expireDays) if expireDays > 1 else "less than 24 hours"
-				responseToken.enqueue(serverPackets.notification("Your donor tag expires in {}! When your donor tag expires, you won't have any of the donor privileges, like yellow username, custom badge and discord custom role and username color! If you wish to keep supporting Ripple and you don't want to lose your donor privileges, you can donate again by clicking on 'Support us' on Ripple's website.".format(expireIn)))
+				responseToken.enqueue(serverPackets.notification("Your donor tag expires in {}! When your donor tag expires, you won't have any of the donor privileges, like yellow username, custom badge and discord custom role and username color! If you wish to keep supporting Minase and you don't want to lose your donor privileges, you can donate again by clicking on 'Support us' on Minase's website.".format(expireIn)))
 
 
 		# Deprecate telegram 2fa and send alert
@@ -143,8 +143,6 @@ def handle(tornadoRequest):
 			raise exceptions.banchoRestartingException()
 
 		# Send login notification before maintenance message
-		if glob.banchoConf.config["loginNotification"] != "":
-			responseToken.enqueue(serverPackets.notification(glob.banchoConf.config["loginNotification"]))
 
 		# Maintenance check
 		if glob.banchoConf.config["banchoMaintenance"]:
@@ -170,11 +168,7 @@ def handle(tornadoRequest):
 		# TODO: Configurable default channels
 		chat.joinChannel(token=responseToken, channel="#osu")
 		chat.joinChannel(token=responseToken, channel="#announce")
-
-		# Join admin channel if we are an admin
-		if responseToken.admin:
-			chat.joinChannel(token=responseToken, channel="#admin")
-
+		glob.redis.publish('ripple:online_users', int(glob.redis.get('ripple:online_users')))
 		# Output channels info
 		for key, value in glob.channels.channels.items():
 			if value.publicRead and not value.hidden:
@@ -242,11 +236,11 @@ def handle(tornadoRequest):
 		responseData = bytes()
 		if responseToken is not None:
 			responseData = responseToken.queue
-		responseData += serverPackets.notification("Our bancho server is in maintenance mode. Please try to login again later.")
+		responseData += serverPackets.rtx("Our bancho server is in maintenance mode. Please try to login again later.")
 		responseData += serverPackets.loginFailed()
 	except exceptions.banchoRestartingException:
 		# Bancho is restarting
-		responseData += serverPackets.notification("Bancho is restarting. Try again in a few minutes.")
+		responseData += serverPackets.rtx('Bancho is restarting!')
 		responseData += serverPackets.loginFailed()
 	except exceptions.need2FAException:
 		# User tried to log in from unknown IP

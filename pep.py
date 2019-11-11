@@ -34,6 +34,7 @@ from objects import fokabot
 from objects import glob
 from pubSubHandlers import changeUsernameHandler, setMainMenuIconHandler
 
+from datetime import datetime
 from pubSubHandlers import disconnectHandler
 from pubSubHandlers import banHandler
 from pubSubHandlers import notificationHandler
@@ -169,6 +170,11 @@ if __name__ == "__main__":
 		fokabot.connect()
 		consoleHelper.printDone()
 
+		consoleHelper.printNoNl('> Creating logs file...')
+		glob.starttime = datetime.now()
+		with open('logs/' + f'{glob.starttime.year}-{glob.starttime.month}-{glob.starttime.day}-{glob.starttime.hour}-{glob.starttime.minute}-{glob.starttime.second}', 'w') as r:
+			r.write(' ')
+		consoleHelper.printDone()
 		# Initialize chat channels
 		print("> Initializing chat channels... ")
 		glob.channels.loadChannels()

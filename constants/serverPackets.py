@@ -96,9 +96,9 @@ def userPanel(userID, force = False):
 	userRank = 0
 	if username == glob.BOT_NAME:
 		userRank |= userRanks.MOD
-	elif username == "Aoba":
+	elif username == "kotypey":
 		userRank |= userRanks.PEPPY
-	elif username == "Natsue":
+	elif username == "otypey":
 		userRank |= userRanks.PEPPY
 	elif userUtils.isInPrivilegeGroup(userID, "developer"):
 		userRank |= userRanks.ADMIN
