@@ -19,7 +19,8 @@ def connect():
 	"""
 	glob.BOT_NAME = userUtils.getUsername(999)
 	token = glob.tokens.addToken(999)
-	token.actionID = actions.IDLE
+	token.actionID = actions.UNKNOWN
+	token.actionText = "\nWelcome to osu!minase have fun"
 	glob.streams.broadcast("main", serverPackets.userPanel(999))
 	glob.streams.broadcast("main", serverPackets.userStats(999))
 

@@ -1,0 +1,16 @@
+[2019-11-21 23:45:03] INFO - IRC server started!
+[2019-11-21 23:45:03] INFO - Server started!
+[2019-11-21 23:45:59] INFO - IRC server started!
+[2019-11-21 23:45:59] INFO - Server started!
+[2019-11-21 23:47:11] INFO - IRC server started!
+[2019-11-21 23:47:11] INFO - Server started!
+[2019-11-21 23:48:21] INFO - IRC server started!
+[2019-11-21 23:48:21] INFO - Server started!
+[2019-11-21 23:49:12] INFO - IRC server started!
+[2019-11-21 23:49:12] INFO - Server started!
+[2019-11-21 23:51:13] INFO - IRC server started!
+[2019-11-21 23:51:13] INFO - Server started!
+[2019-11-21 23:52:08] INFO - IRC server started!
+[2019-11-21 23:52:08] INFO - Server started!
+[2019-11-22 00:29:17] INFO - IRC server started!
+[2019-11-22 00:29:17] INFO - Server started!

@@ -229,14 +229,7 @@ if __name__ == "__main__":
 		glob.application = make_app()
 
 		# Set up sentry
-		try:
-			glob.sentry = generalUtils.stringToBool(glob.conf.config["sentry"]["enable"])
-			if glob.sentry:
-				glob.application.sentry_client = AsyncSentryClient(glob.conf.config["sentry"]["banchodsn"], release=glob.VERSION)
-			else:
-				consoleHelper.printColored("[!] Warning! Sentry logging is disabled!", bcolors.YELLOW)
-		except:
-			consoleHelper.printColored("[!] Error while starting sentry client! Please check your config.ini and run the server again", bcolors.RED)
+		consoleHelper.printColored("[!] Sentry disabled due to bugs", bcolors.GREEN)
 
 		# Set up datadog
 		try:

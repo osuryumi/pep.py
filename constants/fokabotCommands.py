@@ -200,6 +200,7 @@ def silence(fro, chan, message):
 	if targetToken is not None:
 		# user online, silence both in db and with packet
 		targetToken.silence(silenceTime, reason, userID)
+		targetToken.kick(message="Silence, please reconnect", reason="Silenced!")
 	else:
 		# User offline, silence user only in db
 		userUtils.silence(targetUserID, silenceTime, reason, userID)

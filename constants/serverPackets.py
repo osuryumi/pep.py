@@ -6,7 +6,7 @@ from constants import packetIDs
 from constants import userRanks
 from helpers import packetHelper
 from objects import glob
-
+from helpers import chatHelper
 """ Login errors packets """
 def loginFailed():
 	return packetHelper.buildPacket(packetIDs.server_userID, [[-1, dataTypes.SINT32]])
@@ -16,12 +16,12 @@ def forceUpdate():
 
 def loginBanned():
 	packets = packetHelper.buildPacket(packetIDs.server_userID, [[-1, dataTypes.SINT32]])
-	packets += notification("You are banned. You can appeal after one month since your ban by sending an email to support@ripple.moe from the email address you've used to sign up.")
+	packets += notification("Your account is locked. You can't log in, but your profile and scores are still visible from the website. If you want to unlock your account, send an email to kotypey@gmail.com from the email address you've used to sign up.")
 	return packets
 
 def loginLocked():
 	packets = packetHelper.buildPacket(packetIDs.server_userID, [[-1, dataTypes.SINT32]])
-	packets += notification("Your account is locked. You can't log in, but your profile and scores are still visible from the website. If you want to unlock your account, send an email to support@ripple.moe from the email address you've used to sign up.")
+	packets += notification("Your account is locked. You can't log in, but your profile and scores are still visible from the website. If you want to unlock your account, send an email to kotypey@gmail.com from the email address you've used to sign up.")
 	return packets
 
 def loginError():
