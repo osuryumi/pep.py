@@ -62,7 +62,6 @@ from common.sentry import sentry
 class handler(requestsManager.asyncRequestHandler):
 	@tornado.web.asynchronous
 	@tornado.gen.engine
-	@sentry.captureTornado
 	def asyncPost(self):
 		# Track time if needed
 		if glob.outputRequestTime:
