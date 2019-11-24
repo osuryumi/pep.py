@@ -196,7 +196,7 @@ class handler(requestsManager.asyncRequestHandler):
 			except exceptions.tokenNotFoundException:
 				# Token not found. Disconnect that user
 				responseData = serverPackets.loginError()
-				responseData += serverPackets.notification("Whoops! Something went wrong, please login again.")
+				responseData += serverPackets.notification("Sorry! Something changed and we had to restart the server. Please relog!")
 				log.warning("Received packet from unknown token ({}).".format(requestTokenString))
 				log.info("{} has been disconnected (invalid token)".format(requestTokenString))
 			finally:
@@ -477,12 +477,12 @@ body {
       <canvas id="triangles" width="200" height="200"></canvas>
       <span>osu!</span>
    </div>
-  <a target="_blank" href="https://minase.tk" class="button button--pink">
+  <a target="_blank" href="https://ryumi.pw" class="button button--pink">
       <span>
          Play
       </span>
    </a>
-  <a target="_blank" href="https://old.minase.tk" class="button button--aqua">
+  <a target="_blank" href="https://old.ryumi.pw" class="button button--aqua">
       <span>
          Old site
       </span>
