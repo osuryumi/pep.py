@@ -19,7 +19,7 @@ def connect():
 	"""
 	glob.BOT_NAME = userUtils.getUsername(999)
 	token = glob.tokens.addToken(999)
-	token.actionID = actions.NONE
+	token.actionID = actions.IDLE
 	token.actionText = "\nThank you for playing Ryumi! <3"
 	glob.streams.broadcast("main", serverPackets.userPanel(999))
 	glob.streams.broadcast("main", serverPackets.userStats(999))
